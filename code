@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tic Tac Toe</title>
+
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+		}
+
+		h1 {
+			margin-top: 50px;
+		}
+
+		#board {
+			display: inline-block;
+			margin-top: 50px;
+			border: 2px solid black;
+			border-collapse: collapse;
+		}
+
+		#board td {
+			width: 100px;
+			height: 100px;
+			border: 1px solid black;
+			font-size: 50px;
+			text-align: center;
+			vertical-align: middle;
+			cursor: pointer;
+		}
+
+		#board .win {
+			background-color: #4CAF50;
+			color: white;
+		}
+
+		#result {
+			margin-top: 50px;
+			font-size: 30px;
+		}
+
+		#reset {
+			margin-top: 30px;
+			font-size: 20px;
+			padding: 10px 20px;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<h1>Tic Tac Toe</h1>
+	<table id="board">
+		<tr>
+			<td class="square"></td>
+			<td class="square"></td>
+			<td class="square"></td>
+		</tr>
+		<tr>
+			<td class="square"></td>
+			<td class="square"></td>
+			<td class="square"></td>
+		</tr>
+		<tr>
+			<td class="square"></td>
+			<td class="square"></td>
+			<td class="square"></td>
+		</tr>
+	</table>
+	<div id="result"></div>
+	<button id="reset">Reset</button>
+    
+
+	<script>
+		const squares = document.querySelectorAll('.square');
+		const result = document.querySelector('#result');
+		const resetButton = document.querySelector('#reset');
+		let currentPlayer = 'X';
+		let gameEnded = false;
+
+		squares.forEach(square => {
+			square.addEventListener('click', () => {
+				if (gameEnded || square.innerHTML !== '') {
+					return;
+				}
+
+				square.innerHTML = currentPlayer;
+
+				if (checkWin()) {
+					gameEnded = true;
+					result.innerHTML = `${currentPlayer} wins!`;
+					return;
+				}
+
+				if (checkDraw()) {
+					gameEnded = true;
+					result.innerHTML = "It's a draw!";
+					return;
+				}
+
+				currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+			});
+		});
+
+		resetButton.addEventListener('click', resetGame);
+
+		function checkWin() {
+			const winningCombos = [
+				[0, 1, 2],
+				[3, 4, 5],
+				[6, 7, 8],
+				[0, 3, 6],
+				[1, 4, 7],
+				[2, 5, 8],
+				[0, 4, 8],
+				[2, 4, 6]
+			];
+
+			for (let i = 0; i < winningCombos.length; i++) {
+				if (squares[winningCombos[i][0]].innerHTML === currentPlayer &&
+				squares[winningCombos[i][1]].innerHTML === currentPlayer &&
+				squares[winningCombos[i][2]].innerHTML === currentPlayer) {
+				for (let j = 0; j < 3; j++) {
+					squares[winningCombos[i][j]].classList.add('win');
+				}
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function checkDraw() {
+		for (let i = 0; i < squares.length; i++) {
+			if (squares[i].innerHTML === '') {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	function resetGame() {
+		squares.forEach(square => {
+			square.innerHTML = '';
+			square.classList.remove('win');
+		});
+		result.innerHTML = '';
+		currentPlayer = 'X';
+		gameEnded = false;
+	}
+</script>
+</body>
+</html>
